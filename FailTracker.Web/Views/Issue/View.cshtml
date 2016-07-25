@@ -1,0 +1,36 @@
+﻿@model FailTracker.Web.Models.Issue.IssueDetailsViewModel
+
+@{
+    ViewBag.Title = Model.Subject;
+}
+
+<h2>
+    <img src="~/Content/IssueTypes/@(Model.IssueType).png"/> @Model.Subject
+    <small class="pull-right">Received @Model.CreatedAt from @Model.CreatorUserName</small>
+</h2>
+<h4>Currently assigned to @Model.AssignedToUserName</h4>
+<div class="well">
+    <p class="lead">
+        @Model.Body
+    </p>
+</div>
+<div>
+    @using (Html.BeginForm("Delete", "Issue", new { id = Model.IssueID }, FormMethod.Post, new { id = "delete-form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ActionLink("Edit Issue", "Edit", "Issue", new { id = Model.IssueID }, new { @class = "btn btn-primary" })
+        <button type="submit" class="btn btn-warning">Delete Issue</button>
+    }
+</div>
+
+
+@section scripts
+{
+    <script>
+        $(function() {
+            $("#delete-form").on("submit", function () {
+                return confirm("Are you sure you wish to delete this issue?  You cannot undo this action.");
+            });
+        });
+    </script>
+}
